@@ -9,6 +9,7 @@ import {
   BookOpen,
   Activity,
 } from 'lucide-react'
+import { button } from 'framer-motion/client';
 
 // Animations
 const fadeIn = {
@@ -27,6 +28,24 @@ const staggerContainer = {
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
+  // Definindo os itens de navegação centralizados
+  const navItems = [
+    { label: 'Recursos', id: 'recursos' },
+    { label: 'Como Funciona', id: 'como-funciona' },
+    { label: 'Depoimentos', id: 'depoimentos' },
+    { label: 'Começar Agora', id: 'comecar-agora', isButton: true },
+   
+
+  ];
+  
+  const handleNavClick = (id) => {
+    setIsMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-30">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -36,7 +55,14 @@ function Header() {
           transition={{ duration: 0.5 }}
           className="flex items-center"
         >
-          <a href="#" className="flex items-center">
+          <a 
+            href="#" 
+            className="flex items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -53,28 +79,24 @@ function Header() {
         </motion.div>
         
         <nav className="hidden md:flex items-center space-x-8">
-          {['Recursos', 'Como Funciona', 'Depoimentos'].map((item, index) => (
-            <motion.a
+          {navItems.map((item, index) => (
+            <motion.button
               key={index}
-              href={`#${item.toLowerCase().replace(' ', '-')}`}
-              className="text-gray-600 hover:text-blue-600 transition-colors"
+              onClick={() => handleNavClick(item.id)}
+              className={`${
+                item.isButton 
+                  ? 'px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors'
+                  : 'text-gray-600 hover:text-blue-600 transition-colors'
+              }`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
             >
-              {item}
-            </motion.a>
+              {item.label}
+            </motion.button>
           ))}
-          <motion.a
-            href="#get-started"
-            className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
-            Começar Agora
-          </motion.a>
-        </nav>
+          <BtnDeLogin></BtnDeLogin>
+          </nav>
         
         <motion.button
           className="md:hidden text-gray-600"
@@ -99,31 +121,27 @@ function Header() {
             initial="hidden"
             animate="visible"
           >
-            {['Recursos', 'Como Funciona', 'Depoimentos'].map((item, index) => (
-              <motion.a
+            {navItems.map((item, index) => (
+              <motion.button
                 key={index}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="text-gray-600 hover:text-blue-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => handleNavClick(item.id)}
+                className={`${
+                  item.isButton 
+                    ? 'px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors inline-block w-fit'
+                    : 'text-gray-600 hover:text-blue-600 transition-colors py-2 text-left'
+                }`}
                 variants={fadeIn}
               >
-                {item}
-              </motion.a>
+                {item.label}
+              </motion.button>
             ))}
-            <motion.a
-              href="#get-started"
-              className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors inline-block w-fit"
-              onClick={() => setIsMenuOpen(false)}
-              variants={fadeIn}
-            >
-              Começar Agora
-            </motion.a>
           </motion.div>
         </motion.div>
       )}
     </header>
   )
 }
+
 
 function HeroSection() {
   return (
@@ -233,7 +251,7 @@ function FeaturesSection() {
   ];
   
   return (
-    <section id="features" className="w-full bg-white py-16 md:py-24">
+    <section id="recursos" className="w-full bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
         <motion.div 
           className="text-center mb-16"
@@ -304,7 +322,7 @@ function HowItWorksSection() {
   ];
   
   return (
-    <section id="how-it-works" className="w-full bg-gray-50 py-16 md:py-24">
+    <section id="como-funciona" className="w-full bg-gray-50 py-16 md:py-24">
       <div className="container mx-auto px-4">
         <motion.div 
           className="text-center mb-16"
@@ -395,7 +413,7 @@ function TestimonialsSection() {
   ];
   
   return (
-    <section id="testimonials" className="w-full bg-white py-16 md:py-24">
+    <section id="depoimentos" className="w-full bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
         <motion.div 
           className="text-center mb-16"
@@ -463,6 +481,14 @@ function Footer() {
       </div>
     </motion.footer>
   )
+}
+
+function BtnDeLogin(){
+  return (
+    <div>
+     <button className='border-1 border-blue-600 px-5 py-1.5 text-blue-600 rounded-sm hover:bg-blue-50 transition-all duration-150'>Login</button>
+    </div>
+  );
 }
 
 export function App() {
