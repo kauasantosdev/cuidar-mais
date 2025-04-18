@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, href } from 'react-router-dom'
 import { nav } from 'framer-motion/client'
  import PaginaDaIA from './Components/paginaDaIA'  
 import { motion } from 'framer-motion'
@@ -31,6 +31,7 @@ const staggerContainer = {
 };
 
 
+
 function Header() {
   const navigate = useNavigate();
 
@@ -38,16 +39,17 @@ function Header() {
   
   // Definindo os itens de navegação centralizados
   const navItems = [
-    { label: 'Início', id: 'inicio' },
+ 
     { label: 'Como Funciona', id: 'como-funciona' },
     { label: 'Depoimentos', id: 'depoimentos' },
     { label: 'Começar Agora', id: 'comecar-agora', isButton: true, onClick: () => handleNavClick('comecar-agora', true) },
   ];
   
-  
+ 
  
 
   const handleNavClick = (id, isButton) => {
+    console.log('handleNavClick chamado com ID:', id, 'é botão?', isButton);
     setIsMenuOpen(false);
     if (isButton && id === 'comecar-agora') {
       navigate('/chat');
@@ -94,20 +96,20 @@ function Header() {
         
         <nav className="hidden md:flex items-center space-x-8">
           {navItems.map((item, index) => (
-            <motion.button
-              key={index}
-              onClick={() => handleNavClick(item.id)}
-              className={`${
-                item.isButton 
-                  ? 'px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors'
-                  : 'text-gray-600 hover:text-blue-600 transition-colors'
-              }`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
-            >
-              {item.label}
-            </motion.button>
+          <motion.button
+          key={index}
+          onClick={() => handleNavClick(item.id, item.isButton)} // Passar item.isButton como segundo argumento
+          className={`${
+            item.isButton 
+              ? 'px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors'
+              : 'text-gray-600 hover:text-blue-600 transition-colors'
+          }`}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
+        >
+          {item.label}
+        </motion.button>
           ))}
          
           </nav>
@@ -158,7 +160,12 @@ function Header() {
 
 
 function HeroSection() {
+  const navigate = useNavigate();
+  const handleStartFree = () => {
+    navigate('/chat');
+  };
   return (
+    
     <section className="w-full bg-gradient-to-br from-blue-50 to-indigo-100 py-16 md:py-24">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <motion.div 
@@ -192,23 +199,28 @@ function HeroSection() {
             transition={{ delay: 0.6, duration: 0.6 }}
           >
             <a
-              href="#get-started"
+            onClick={handleStartFree()}
+               
               className="px-6 py-3 bg-blue-600 text-white rounded-md text-center
                hover:bg-white hover:text-blue-600 hover:border-blue-600 hover:border-1
                transition-all duration-200"
                
               whileTap={{ scale: 0.95 }}
-            >
+             >
               Começar Gratuitamente
             </a>
             <a
               href="#how-it-works"
+              id='como-funciona'
               className="px-6 py-3 bg-white text-blue-600 border border-blue-600 rounded-md text-center hover:bg-blue-50 transition-colors"
-            
               whileTap={{ scale: 0.95 }}
+ 
             >
               Saiba Mais
             </a>
+
+          
+            
           </motion.div>
         </motion.div>
         
@@ -510,20 +522,27 @@ function BtnDeLogin() {
 }
 
 export function App() {
-  
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Routes>
-  <Route path='/chat' element={<PaginaDaIA />} />
-</Routes>
-      <Header />
-      <main className="flex-1">
-        <HeroSection />
-        <FeaturesSection />
-        <HowItWorksSection />
-        <TestimonialsSection />
-      </main>
-      <Footer />
+        <Route path='/chat' element={
+          <div className="flex flex-col h-screen">
+            <PaginaDaIA />
+          </div>
+        } />
+        <Route path='/' element={
+          <>
+            <Header />
+            <main className="flex-1">
+              <HeroSection />
+              <FeaturesSection />
+              <HowItWorksSection />
+              <TestimonialsSection />
+            </main>
+            <Footer />
+          </>
+        } />
+      </Routes>
     </div>
   )
 }
