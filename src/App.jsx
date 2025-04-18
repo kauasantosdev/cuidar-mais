@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion';
-import {
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import { nav } from 'framer-motion/client'
+ import PaginaDaIA from './Components/paginaDaIA'  
+import { motion } from 'framer-motion'
+
+ import {
   Menu,
   X,
   Heart,
@@ -9,8 +13,9 @@ import {
   BookOpen,
   Activity,
 } from 'lucide-react'
-import { button } from 'framer-motion/client';
+  
 
+ 
 // Animations
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -25,26 +30,35 @@ const staggerContainer = {
   }
 };
 
+
 function Header() {
+  const navigate = useNavigate();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
   // Definindo os itens de navegação centralizados
   const navItems = [
-    { label: 'Recursos', id: 'recursos' },
+    { label: 'Início', id: 'inicio' },
     { label: 'Como Funciona', id: 'como-funciona' },
     { label: 'Depoimentos', id: 'depoimentos' },
-    { label: 'Começar Agora', id: 'comecar-agora', isButton: true },
-   
-
+    { label: 'Começar Agora', id: 'comecar-agora', isButton: true, onClick: () => handleNavClick('comecar-agora', true) },
   ];
   
-  const handleNavClick = (id) => {
+  
+ 
+
+  const handleNavClick = (id, isButton) => {
     setIsMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (isButton && id === 'comecar-agora') {
+      navigate('/chat');
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
+  
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-30">
@@ -95,7 +109,7 @@ function Header() {
               {item.label}
             </motion.button>
           ))}
-          <BtnDeLogin></BtnDeLogin>
+         
           </nav>
         
         <motion.button
@@ -482,18 +496,26 @@ function Footer() {
     </motion.footer>
   )
 }
-
-function BtnDeLogin(){
+function BtnDeLogin() {
   return (
     <div>
-     <button className='border-1 border-blue-600 px-5 py-1.5 text-blue-600 rounded-sm hover:bg-blue-50 transition-all duration-150'>Login</button>
+      <button
+        className='border-1 border-blue-600 px-5 py-1.5 text-blue-600 rounded-sm hover:bg-blue-50 transition-all duration-150'
+        onclick="console.log('Botão clicado!');"
+      >
+        Login
+      </button>
     </div>
   );
 }
 
 export function App() {
+  
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Routes>
+  <Route path='/chat' element={<PaginaDaIA />} />
+</Routes>
       <Header />
       <main className="flex-1">
         <HeroSection />
